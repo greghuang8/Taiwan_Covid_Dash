@@ -49,19 +49,30 @@ compare <- full_join(deaths, deaths_update, by = "Date",
   mutate(Date = as.character(Date)) %>%
   arrange(Date)
 
+
+chronic_tally <- master %>%
+  select(DOD, Chronic) %>%
+  mutate(DOD = as.character(DOD)) %>%
+  count(Chronic, DOD) %>%
+  spread(Chronic, n) %>%
+  arrange(DOD) %>%
+  select(-DOD)
+
 gender_tally <- master %>%
   select(DOD, Gender) %>%
   mutate(DOD = as.character(DOD))%>%
   count(Gender,DOD) %>%
   spread(Gender, n) %>%
-  arrange(DOD)
-  
-release <- bind_cols(compare, gender_tally) %>%
-  select(-DOD) 
+  arrange(DOD) %>%
+  bind_cols(chronic_tally)
 
+release <- bind_cols(compare, gender_tally) %>%
+  select(-DOD)
+  
 colnames(release) <- c("Date_of_Death", "Deaths_Reported_Yesterday",
                       "Deaths_Reported_Today", "New_Deaths_Reported", 
-                      "Female", "Male")
+                      "Female", "Male", "Has_Chronic_Illness", 
+                      "No_Chronic_Illness", "Chronic_Illness_Uncertain")
 release[is.na(release)]<- 0
 
 
