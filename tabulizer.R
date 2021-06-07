@@ -68,9 +68,10 @@ gender_tally <- master %>%
   bind_cols(chronic_tally)
 
 release <- bind_cols(compare, gender_tally) %>%
-  select(-DOD)
+  select(-DOD) %>%
+  select(-Deaths_reported_yesterday)
   
-colnames(release) <- c("Date_of_Death", "Previous_Death_Count",
+colnames(release) <- c("Date_of_Death",
                       "Updated_Death_Count", "New_Deaths_Reported_Today", 
                       "Female", "Male", "Has_Chronic_Illness", 
                       "No_Chronic_Illness", "Chronic_Illness_Uncertain")
