@@ -70,8 +70,8 @@ gender_tally <- master %>%
 release <- bind_cols(compare, gender_tally) %>%
   select(-DOD)
   
-colnames(release) <- c("Date_of_Death", "Deaths_Reported_Yesterday",
-                      "Deaths_Reported_Today", "New_Deaths_Reported", 
+colnames(release) <- c("Date_of_Death", "Previous_Death_Count",
+                      "Updated_Death_Count", "New_Deaths_Reported_Today", 
                       "Female", "Male", "Has_Chronic_Illness", 
                       "No_Chronic_Illness", "Chronic_Illness_Uncertain")
 release[is.na(release)]<- 0
