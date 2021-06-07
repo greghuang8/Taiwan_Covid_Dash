@@ -1,4 +1,4 @@
-"","Date_of_Death","Deaths_Reported_Yesterday","Deaths_Reported_Today","New_Deaths_Reported","Female","Male","Has_Chronic_Illness","No_Chronic_Illness","Chronic_Illness_Uncertain"
+"","Date_of_Death","Previous_Death_Count","Updated_Death_Count","New_Deaths_Reported_Today","Female","Male","Has_Chronic_Illness","No_Chronic_Illness","Chronic_Illness_Uncertain"
 "1","5/23",1,1,0,0,1,1,0,0
 "2","5/26",1,1,0,0,1,1,0,0
 "3","5/28",3,3,0,2,1,1,2,0
