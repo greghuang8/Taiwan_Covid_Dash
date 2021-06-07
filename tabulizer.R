@@ -49,14 +49,14 @@ compare <- full_join(deaths, deaths_update, by = "Date",
   mutate(Date = as.character(Date)) %>%
   arrange(Date)
 
-test_group <- master %>%
+gender_tally <- master %>%
   select(DOD, Gender) %>%
   mutate(DOD = as.character(DOD))%>%
   count(Gender,DOD) %>%
   spread(Gender, n) %>%
   arrange(DOD)
   
-release <- bind_cols(compare, test_group) %>%
+release <- bind_cols(compare, gender_tally) %>%
   select(-DOD) 
 
 colnames(release) <- c("Date_of_Death", "Deaths_Reported_Yesterday",
