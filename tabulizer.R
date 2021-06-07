@@ -16,8 +16,7 @@ deaths <- as.data.frame(table(master$DOD))
 colnames(deaths) <- c("Date", "Deaths")
 
 ##### Daily Updates #####
-today <- extract_tables("june6.pdf")
-
+today <- extract_tables("june7.pdf")
 page1_today <- as.data.frame(today[[1]], stringAsFactors = FALSE)
 
 if (length(today) > 1){
@@ -33,6 +32,8 @@ colnames(master_today) <- c("CaseNum","Gender","Age","Chronic","History",
                          "QuarantineDate","ConfirmDate","DOD")
 
 ##### Bind today's results to Master #####
+deaths <- as.data.frame(table(master$DOD))
+colnames(deaths) <- c("Date", "Deaths")
 master <- bind_rows(master, master_today)
 
 ##### Analytics #####
