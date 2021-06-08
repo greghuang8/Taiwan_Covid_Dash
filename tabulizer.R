@@ -63,8 +63,8 @@ for(item in list.files("pdf")){
 
 ##### Analytics for MASTER data #####
 analytics <- master %>%
+  mutate(Age = str_extract_all(Age,"[0-9]+"))%>%
   mutate(Age = paste("Age_", Age, sep=""))%>%
-  mutate(Age = str_sub(Age,1,6)) %>%
   mutate(Age = paste(Age,"_plus",sep="")) %>%
   mutate(Chronic = str_replace(Chronic, "無", "No_Chronic_Condition")) %>%
   mutate(Chronic = str_replace(Chronic, "調查中",

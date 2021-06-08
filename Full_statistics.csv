@@ -1,4 +1,4 @@
-"","Date","Deaths","Female","Male","Chronic_Condition_Uncertain","Has_Chronic_Condition","No_Chronic_Condition","Age_10_plus","Age_30_plus","Age_40_plus","Age_50_plus","Age_60_plus","Age_70_plus","Age_80_plus","Age_90_plus"
+"","Date","Deaths","Female","Male","Chronic_Condition_Uncertain","Has_Chronic_Condition","No_Chronic_Condition","Age_100_plus","Age_30_plus","Age_40_plus","Age_50_plus","Age_60_plus","Age_70_plus","Age_80_plus","Age_90_plus"
 "1","5/21",2,1,1,1,1,0,0,0,0,0,0,0,2,0
 "2","5/22",3,0,3,0,3,0,0,0,0,0,2,0,1,0
 "3","5/23",6,2,4,0,5,1,0,0,0,1,0,2,2,1
