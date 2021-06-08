@@ -125,10 +125,10 @@ compare <- full_join(deaths, deaths_today, by = "Date",
                      suffix = c("_previously_reported", "_reported_today")) %>%
   replace_na(list("Deaths_previously_reported" = 0, 
                   "Deaths_reported_today" = 0)) %>%
-  mutate(New_deaths_reported = 
+  mutate(New_deaths_added = 
            Deaths_reported_today - Deaths_previously_reported) %>%
-  mutate(New_deaths_reported = if_else(New_deaths_reported < 0, 0, 
-                                       New_deaths_reported)) %>%
+  mutate(New_deaths_added = if_else(New_deaths_added < 0, 0, 
+                                       New_deaths_added)) %>%
   mutate(Date = as.character(Date)) %>%
   arrange(Date)
 
