@@ -118,17 +118,15 @@ colnames(today) <- c("CaseNum","Gender","Age","Chronic","History",
                          "QuarantineDate","ConfirmDate","DOD")
 
 ##### Compare today's deaths to master #####
+deaths_old <- deaths
 deaths_today <- as.data.frame(table(today$DOD))
 colnames(deaths_today) <- c("Date", "Deaths")
 
-compare <- full_join(deaths, deaths_today, by = "Date", 
+compare <- full_join(deaths_old, deaths_today, by = "Date", 
                      suffix = c("_previously_reported", "_reported_today")) %>%
   replace_na(list("Deaths_previously_reported" = 0, 
                   "Deaths_reported_today" = 0)) %>%
-  mutate(New_deaths_added = 
-           Deaths_reported_today - Deaths_previously_reported) %>%
-  mutate(New_deaths_added = if_else(New_deaths_added < 0, 0, 
-                                       New_deaths_added)) %>%
+  mutate(New_total = Deaths_previously_reported + Deaths_reported_today)%>%
   mutate(Date = as.character(Date)) %>%
   arrange(Date)
 
