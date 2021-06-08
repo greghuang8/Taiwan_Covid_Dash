@@ -65,14 +65,13 @@ for(item in list.files("pdf")){
 analytics <- master %>%
   mutate(Age = paste("Age_", Age, sep=""))%>%
   mutate(Age = str_sub(Age,1,6)) %>%
-  mutate(Age = paste(Age,"+",sep="")) %>%
+  mutate(Age = paste(Age,"_plus",sep="")) %>%
   mutate(Chronic = str_replace(Chronic, "無", "No_Chronic_Condition")) %>%
   mutate(Chronic = str_replace(Chronic, "調查中",
                                "Chronic_Condition_Uncertain")) %>%
   mutate(Chronic = iconv(Chronic,from = "latin1", to = "ASCII")) %>%
   mutate(Chronic = replace_na(Chronic, "Has_Chronic_Condition")) %>%
   mutate(DOD = as.character(DOD))
-
 
 deaths <- as.data.frame(table(analytics$DOD))
 colnames(deaths) <- c("Date", "Deaths")
@@ -112,37 +111,30 @@ write.csv(analytics_release, "Full_statistics.csv")
 
 ##### DAILY CHANGE TRACKING #####
 today <- extract_tables("june8.pdf")
-
-master_today <- page1_today[-1,2:12]
-colnames(master_today) <- c("CaseNum","Gender","Age","Chronic","History",
+today <- as.data.frame(today[[1]])
+today <- today[-1,2:12]
+colnames(today) <- c("CaseNum","Gender","Age","Chronic","History",
                          "SymptomDate", "Symptoms","TestDate",
                          "QuarantineDate","ConfirmDate","DOD")
 
-##### Bind today's results to Master #####
-deaths <- as.data.frame(table(master$DOD))
-colnames(deaths) <- c("Date", "Deaths")
-master <- bind_rows(master, master_today)
+##### Compare today's deaths to master #####
+deaths_today <- as.data.frame(table(today$DOD))
+colnames(deaths_today) <- c("Date", "Deaths")
 
-
-deaths_update <- as.data.frame(table(master$DOD))
-colnames(deaths_update) <- c("Date", "Deaths")
-
-
-compare <- full_join(deaths, deaths_update, by = "Date", 
-                     suffix = c("_reported_yesterday", "_reported_today")) %>%
-  replace_na(list("Deaths_reported_yesterday" = 0, 
+compare <- full_join(deaths, deaths_today, by = "Date", 
+                     suffix = c("_previously_reported", "_reported_today")) %>%
+  replace_na(list("Deaths_previously_reported" = 0, 
                   "Deaths_reported_today" = 0)) %>%
   mutate(New_deaths_reported = 
-           Deaths_reported_today - Deaths_reported_yesterday) %>%
+           Deaths_reported_today - Deaths_previously_reported) %>%
+  mutate(New_deaths_reported = if_else(New_deaths_reported < 0, 0, 
+                                       New_deaths_reported)) %>%
   mutate(Date = as.character(Date)) %>%
   arrange(Date)
 
-
-release[is.na(release)]<- 0
-
-
 ##### Output #####
-write.csv(release, "Daily_release.csv")
-  
+write.csv(compare, "Daily_change_June_8.csv")
+
+
   
 
