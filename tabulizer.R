@@ -78,7 +78,8 @@ colnames(deaths) <- c("Date", "Deaths")
 deaths <- deaths %>%
   mutate(Date = as.character(Date)) %>%
   arrange(Date)
-  
+
+
 gender_tally <- analytics %>%
   select(DOD, Gender) %>%
   count(Gender,DOD) %>%
@@ -110,9 +111,12 @@ write.csv(analytics_release, "Full_statistics.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("june8.pdf")
-today <- as.data.frame(today[[1]])
-today <- today[-1,2:12]
+today <- extract_tables("june9.pdf")
+page1 <- as.data.frame(today[[1]])
+page1 <- page1[-1,2:12]
+page2 <- as.data.frame(today[[2]], stringAsFactors = FALSE)
+page2 <- page2[-1,2:12]
+today <- bind_rows(page1,page2)
 colnames(today) <- c("CaseNum","Gender","Age","Chronic","History",
                          "SymptomDate", "Symptoms","TestDate",
                          "QuarantineDate","ConfirmDate","DOD")
