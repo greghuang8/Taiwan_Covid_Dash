@@ -41,23 +41,21 @@ colnames(master) <- c("CaseNum","Gender","Age","Chronic","History",
 for(item in list.files("pdf")){
   path <- paste("pdf/",item, sep = "")
   pdf_table <- extract_tables(path)   
-  page1 <- as.data.frame(pdf_table[[1]], stringAsFactors = FALSE)
-  page1 <- page1[-1,2:12] 
+  pages <- as.data.frame(pdf_table[[1]], stringAsFactors = FALSE)
+  pages <- pages[-1,2:12] 
   
   if(length(pdf_table) > 1) {
-    for (x in 1:length(pdf_table)){
+    for (x in 2:length(pdf_table)){
       nextPage <- as.data.frame(pdf_table[[x]], stringAsFactors = FALSE)
       nextPage <- nextPage[-1,2:12]
-      final <- bind_rows(page1,nextPage)
+      pages <- bind_rows(pages,nextPage)
       }
   }
-  else{
-    final <- page1
-  }
-  colnames(final) <- c("CaseNum","Gender","Age","Chronic","History",
+
+  colnames(pages) <- c("CaseNum","Gender","Age","Chronic","History",
                         "SymptomDate", "Symptoms","TestDate",
                         "QuarantineDate","ConfirmDate","DOD")
-  master <- bind_rows(master,final)
+  master <- bind_rows(master,pages)
   
 }
 
@@ -71,7 +69,8 @@ analytics <- master %>%
                                "Chronic_Condition_Uncertain")) %>%
   mutate(Chronic = iconv(Chronic,from = "latin1", to = "ASCII")) %>%
   mutate(Chronic = replace_na(Chronic, "Has_Chronic_Condition")) %>%
-  mutate(DOD = as.character(DOD))
+  mutate(DOD = as.character(DOD)) %>%
+  select(DOD, Gender, Chronic, Age)
 
 deaths <- as.data.frame(table(analytics$DOD))
 colnames(deaths) <- c("Date", "Deaths")
@@ -79,31 +78,37 @@ deaths <- deaths %>%
   mutate(Date = as.character(Date)) %>%
   arrange(Date)
 
+gender_tally <- analytics %>%
+  group_by(Gender, DOD) %>%
+  add_tally(Gender, DOD, name = "Gender_Count") %>%
+  pivot_wider(names_from = DOD, 
+              values_from = Gender_Count,
+              values_fill = 0)
 
 gender_tally <- analytics %>%
-  select(DOD, Gender) %>%
-  count(Gender,DOD) %>%
-  spread(Gender, n) %>%
-  arrange(DOD) %>%
+  count(Gender, DOD) %>%
+  pivot_wider(names_from = Gender, values_from = n, values_fill = 0)%>%
+  arrange(DOD)%>%
   select(-DOD)
+
 
 chronic_tally <- analytics %>%
   count(Chronic, DOD) %>%
-  spread(Chronic, n) %>%
-  arrange(DOD) %>%
+  pivot_wider(names_from = Chronic, values_from = n, values_fill = 0)%>%
+  arrange(DOD)%>%
   select(-DOD)
 
 age_tally <- analytics %>%
   count(Age, DOD) %>%
-  spread(Age, n) %>%
-  arrange(DOD) %>%
+  pivot_wider(names_from = Age, values_from = n, values_fill = 0)%>%
+  arrange(DOD)%>%
   select(-DOD)
 
 analytics_release <- bind_cols(list(deaths, gender_tally,
                                     chronic_tally, age_tally))
+
 colnames(analytics_release)[colnames(analytics_release) == "女"] <- "Female"
 colnames(analytics_release)[colnames(analytics_release) == "男"] <- "Male"
-analytics_release[is.na(analytics_release)] <- 0
 
 write.csv(analytics_release, "Full_statistics.csv")
 
@@ -111,19 +116,25 @@ write.csv(analytics_release, "Full_statistics.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("june9.pdf")
-page1 <- as.data.frame(today[[1]])
-page1 <- page1[-1,2:12]
-page2 <- as.data.frame(today[[2]], stringAsFactors = FALSE)
-page2 <- page2[-1,2:12]
-today <- bind_rows(page1,page2)
-colnames(today) <- c("CaseNum","Gender","Age","Chronic","History",
+today <- extract_tables("june10.pdf")
+pages_today <- as.data.frame(today[[1]])
+pages_today <- pages_today[-1,2:12]
+
+if(length(today) > 1) {
+  for (x in 2:length(today)){
+    nextPage <- as.data.frame(today[[x]], stringAsFactors = FALSE)
+    nextPage <- nextPage[-1,2:12]
+    pages_today <- bind_rows(pages_today,nextPage)
+  }
+}
+
+colnames(pages_today) <- c("CaseNum","Gender","Age","Chronic","History",
                          "SymptomDate", "Symptoms","TestDate",
                          "QuarantineDate","ConfirmDate","DOD")
 
 ##### Compare today's deaths to master #####
 deaths_old <- deaths
-deaths_today <- as.data.frame(table(today$DOD))
+deaths_today <- as.data.frame(table(pages_today$DOD))
 colnames(deaths_today) <- c("Date", "Deaths")
 
 compare <- full_join(deaths_old, deaths_today, by = "Date", 
@@ -135,7 +146,7 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   arrange(Date)
 
 ##### Output #####
-write.csv(compare, "Daily_change_June_8.csv")
+write.csv(compare, "Daily_change_June_10.csv")
 
 
   
