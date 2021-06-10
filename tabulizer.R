@@ -79,18 +79,10 @@ deaths <- deaths %>%
   arrange(Date)
 
 gender_tally <- analytics %>%
-  group_by(Gender, DOD) %>%
-  add_tally(Gender, DOD, name = "Gender_Count") %>%
-  pivot_wider(names_from = DOD, 
-              values_from = Gender_Count,
-              values_fill = 0)
-
-gender_tally <- analytics %>%
   count(Gender, DOD) %>%
   pivot_wider(names_from = Gender, values_from = n, values_fill = 0)%>%
   arrange(DOD)%>%
   select(-DOD)
-
 
 chronic_tally <- analytics %>%
   count(Chronic, DOD) %>%
