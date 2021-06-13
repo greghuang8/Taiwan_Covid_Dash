@@ -97,7 +97,9 @@ age_tally <- analytics %>%
   select(-DOD)
 
 analytics_release <- bind_cols(list(deaths, gender_tally,
-                                    chronic_tally, age_tally))
+                                    chronic_tally, age_tally)) %>%
+  mutate(Date = as.Date(Date, "%m/%d")) %>%
+  arrange(Date)
 
 colnames(analytics_release)[colnames(analytics_release) == "女"] <- "Female"
 colnames(analytics_release)[colnames(analytics_release) == "男"] <- "Male"
@@ -108,7 +110,7 @@ write.csv(analytics_release, "Full_statistics.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("june11.pdf")
+today <- extract_tables("june13.pdf")
 pages_today <- as.data.frame(today[[1]])
 pages_today <- pages_today[-1,2:12]
 
@@ -134,11 +136,11 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   replace_na(list("Deaths_previously_reported" = 0, 
                   "Deaths_reported_today" = 0)) %>%
   mutate(New_total = Deaths_previously_reported + Deaths_reported_today)%>%
-  mutate(Date = as.character(Date)) %>%
+  mutate(Date = as.Date(Date,"%m/%d")) %>%
   arrange(Date)
 
 ##### Output #####
-write.csv(compare, "Daily_change_June_11.csv")
+write.csv(compare, "Daily_changes/Daily_change_June_13.csv")
 
 
   
