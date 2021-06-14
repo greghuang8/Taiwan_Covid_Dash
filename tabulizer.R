@@ -23,7 +23,6 @@ for (item in list.files("retro_pdf")){
   }
 }
 
-
 ##### Setup June 5th (unique case w/ locations) #####
 june5 <- extract_tables("june5.pdf")
 page1 <- as.data.frame(june5[[1]], stringAsFactors = FALSE)
@@ -99,6 +98,7 @@ age_tally <- analytics %>%
 analytics_release <- bind_cols(list(deaths, gender_tally,
                                     chronic_tally, age_tally)) %>%
   mutate(Date = as.Date(Date, "%m/%d")) %>%
+  mutate(Date = format(Date, format = "%m/%d")) %>%
   arrange(Date)
 
 colnames(analytics_release)[colnames(analytics_release) == "女"] <- "Female"
@@ -136,7 +136,8 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   replace_na(list("Deaths_previously_reported" = 0, 
                   "Deaths_reported_today" = 0)) %>%
   mutate(New_total = Deaths_previously_reported + Deaths_reported_today)%>%
-  mutate(Date = as.Date(Date,"%m/%d")) %>%
+  mutate(Date = as.Date(Date, "%m/%d")) %>%
+  mutate(Date = format(Date, "%m/%d")) %>%
   arrange(Date)
 
 ##### Output #####
