@@ -8,12 +8,10 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 daily_change <- read.csv("daily_changes/Daily_change_June_14.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
-  select(-X) 
+  select(-X)
 colnames(daily_change) = c("Date", "Deaths Previously Reported",
                            "Deaths Reported Today", "Updated Total Deaths")
 
-today_only <- daily_change %>%
-  filter(Deaths_reported_today != 0)
 
 # Basic plots
 daily_change %>%
@@ -22,9 +20,11 @@ daily_change %>%
   ggplot(aes(x = Date, y = Deaths , fill = Category, label = Deaths)) +
   geom_bar(stat = "identity", position = position_stack(reverse = TRUE))+
   geom_text(size = 3, position = position_stack(vjust=0.6, reverse = TRUE))+
+  theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "Taiwan Covid Deaths",
        subtitle = "Updated June 14th, 2021")
-           
+
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
