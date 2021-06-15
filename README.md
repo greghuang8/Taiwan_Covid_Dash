@@ -19,13 +19,21 @@ Note that since I did not start collecting data from Taiwan CDC until late May,
 and there were no similar news releases that contained data prior to May 21st,
 this project under reports 59 deaths that occurred before this date. 
 
-Plots for newly reported deaths can be found in the *plots* folder. 
+Plots for newly reported deaths can be found in the [**plots**](https://github.com/greghuang8/Taiwan_Covid_Dash/tree/main/plots) folder. 
 
-Here is an example plot (from June 14th), in English:
+A summarized csv file that groups each day's death statistics can be found at 
+[**Full_statistics.csv**](https://github.com/greghuang8/Taiwan_Covid_Dash/blob/main/Full_statistics.csv).
 
-![](plots/plot_june14.png)
+Each day's new added deaths are stored in the [**daily_changes**](https://github.com/greghuang8/Taiwan_Covid_Dash/tree/main/daily_changes) folder. 
+
+
+
+Here is an example plot (from June 15th), in English:
+
+![](plots/plot_june15.png)
 
 and in Traditional Chinese:
-![](plots/tw_plots/tw_plot_june14.png)
+  
+![](plots/tw_plots/tw_plot_june15.png)
 
 
