@@ -22,6 +22,8 @@ this project under reports 59 deaths that occurred before this date.
 Special thanks to [@xyk2](https://github.com/xyk2) for the idea to snap true 
 dates of death from the daily news releases. 
 
+## Roadmap 
+
 Plots for newly reported deaths can be found in the [**plots**](https://github.com/greghuang8/Taiwan_Covid_Dash/tree/main/plots) folder. 
 
 A summarized csv file that groups each day's death statistics can be found at 
@@ -29,7 +31,7 @@ A summarized csv file that groups each day's death statistics can be found at
 
 Each day's new added deaths are stored in the [**daily_changes**](https://github.com/greghuang8/Taiwan_Covid_Dash/tree/main/daily_changes) folder. 
 
-
+## Example outputs
 
 Here is an example plot (from June 15th), in English:
 
