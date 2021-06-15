@@ -19,8 +19,8 @@ Note that since I did not start collecting data from Taiwan CDC until late May,
 and there were no similar news releases that contained data prior to May 21st,
 this project under reports 59 deaths that occurred before this date. 
 
-Special thanks to @xyk2 for the idea to snap true dates of death from the daily
-news releases. 
+Special thanks to [@xyk2](https://github.com/xyk2) for the idea to snap true 
+dates of death from the daily news releases. 
 
 Plots for newly reported deaths can be found in the [**plots**](https://github.com/greghuang8/Taiwan_Covid_Dash/tree/main/plots) folder. 
 
