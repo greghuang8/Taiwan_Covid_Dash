@@ -110,7 +110,7 @@ write.csv(analytics_release, "Full_statistics.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("june17.pdf")
+today <- extract_tables("june18.pdf")
 pages_today <- as.data.frame(today[[1]])
 pages_today <- pages_today[-1,2:12]
 
