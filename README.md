@@ -33,12 +33,12 @@ Each day's new added deaths are stored in the [**daily_changes**](https://github
 
 ## Example outputs
 
-Here is an example plot (from June 18th), in English:
+Here is an example plot (from June 19th), in English:
 
-![](plots/plot_june18.png)
+![](plots/plot_june19.png)
 
 and in Traditional Chinese:
   
-![](plots/tw_plots/tw_plot_june18.png)
+![](plots/tw_plots/tw_plot_june19.png)
 
 
