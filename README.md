@@ -24,7 +24,7 @@ dates of death from the daily news releases.
 
 ## Roadmap 
 
-Plots for newly reported deaths can be found in the [**plots**](https://github.com/greghuang8/Taiwan_Covid_Dash/tree/main/plots) folder. 
+Plots for newly reported deaths and other statistics can be found in the [**plots**](https://github.com/greghuang8/Taiwan_Covid_Dash/tree/main/plots) folder. 
 
 A summarized csv file that groups each day's death statistics can be found at 
 [**Full_statistics.csv**](https://github.com/greghuang8/Taiwan_Covid_Dash/blob/main/Full_statistics.csv).
@@ -33,12 +33,27 @@ Each day's new added deaths are stored in the [**daily_changes**](https://github
 
 ## Example outputs
 
-Here is an example plot (from June 21st, with 20 deaths reported), in English:
+Here are example plots (from June 22nd, with 6 deaths reported), indicating newly added deaths reported today, in English:
 
-![](plots/plot_june21.png)
+![](plots/plot_june22.png)
 
 and in Traditional Chinese:
   
-![](plots/tw_plots/tw_plot_june21.png)
+![](plots/tw_plots/tw_plot_june22.png)
+
+As well as grouping statistics for Age, Gender, and Chronic Conditions (June 22).
+
+![](plots/stat_plots/age_plot_june22.png)
+
+![](plots/stat_plots/gender_plot_june22.png)
+
+![](plots/stat_plots/chronic_plot_june22.png)
+
+Bonus pie charts for breakdowns: 
+![](plots/stat_plots/chronic_pie_june22.png)
+
+![](plots/stat_plots/gender_pie_june22.png)
+
+
 
 
