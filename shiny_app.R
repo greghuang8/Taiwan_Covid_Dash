@@ -88,6 +88,7 @@ full_stats %>%
   geom_bar(stat = "identity") +
   geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
+  scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
   labs(title = "Deaths By Gender", 
        caption = "Source: Taiwan CDC")
 
