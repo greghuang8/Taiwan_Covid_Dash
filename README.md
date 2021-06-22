@@ -45,8 +45,6 @@ As well as grouping statistics for Age, Gender, and Chronic Conditions (June 22)
 
 ![](plots/stat_plots/age_plot_june22.png)
 
-![](plots/stat_plots/gender_plot_june22.png)
-
 ![](plots/stat_plots/chronic_plot_june22.png)
 
 Bonus pie charts for breakdowns: 
