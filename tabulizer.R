@@ -116,7 +116,7 @@ date.format <- function(x, na.rm = FALSE) (format(x, format = "%m/%d"))
 duration <- master %>%
   select(CaseNum, DOD, ConfirmDate) %>%
   mutate_at(date_variables,date.conversion) %>%
-  mutate(DTD = as.numeric(as.duration((DOD-ConfirmDate)/ddays(1)),"seconds")) %>%
+  mutate(DTD = as.duration((DOD-ConfirmDate))/ddays(1)) %>%
   mutate_at(date_variables, date.format)
 
 write.csv(duration, "Durations.csv")
