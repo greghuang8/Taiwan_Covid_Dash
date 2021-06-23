@@ -111,11 +111,13 @@ write.csv(analytics_release, "Full_statistics.csv")
 ##### DURATION ANALYTICS #####
 date_variables <- c("DOD","ConfirmDate")
 date.conversion <- function(x, na.rm = FALSE) (as.Date(x,"%m/%d"))
+date.format <- function(x, na.rm = FALSE) (format(x, format = "%m/%d"))
 
 duration <- master %>%
   select(CaseNum, DOD, ConfirmDate) %>%
   mutate_at(date_variables,date.conversion) %>%
-  mutate(DTD = as.numeric(as.duration((DOD-ConfirmDate)/ddays(1)),"seconds"))
+  mutate(DTD = as.numeric(as.duration((DOD-ConfirmDate)/ddays(1)),"seconds")) %>%
+  mutate_at(date_variables, date.format)
 
 write.csv(duration, "Durations.csv")
 # Code above allows for reproduction of the entire database up til 
