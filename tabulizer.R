@@ -2,6 +2,7 @@ install.packages("tidyverse")
 install.packages("tabulizer")
 library(tabulizer)
 library(tidyverse)
+library(lubridate)
 
 ##### Retrospective Data Additions #####
 # May 28 to June 4th all have the same format
@@ -106,6 +107,17 @@ colnames(analytics_release)[colnames(analytics_release) == "男"] <- "Male"
 
 write.csv(analytics_release, "Full_statistics.csv")
 
+
+##### DURATION ANALYTICS #####
+date_variables <- c("DOD","ConfirmDate")
+date.conversion <- function(x, na.rm = FALSE) (as.Date(x,"%m/%d"))
+
+duration <- master %>%
+  select(CaseNum, DOD, ConfirmDate) %>%
+  mutate_at(date_variables,date.conversion) %>%
+  mutate(DTD = as.numeric(as.duration((DOD-ConfirmDate)/ddays(1)),"seconds"))
+
+write.csv(duration, "Durations.csv")
 # Code above allows for reproduction of the entire database up til 
 # the most recent press release of death counts. 
 
