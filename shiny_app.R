@@ -8,7 +8,7 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
   select(-X) %>%
   na_if(0)
 
-daily_change <- read.csv("daily_changes/Daily_change_June_23.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_June_24.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
@@ -29,7 +29,7 @@ daily_change_tw %>%
   geom_text(size = 3, position = position_stack(vjust=0.6))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "臺灣新冠肺炎死亡案例統計",
-       subtitle = "2021年6月23日更新 / 5月21日開始追蹤",
+       subtitle = "2021年6月24日更新 / 5月21日開始追蹤",
        caption = "資料來源: 臺灣衛生福利部疾病管制署")
 
 
@@ -42,7 +42,7 @@ daily_change %>%
   geom_text(size = 3, position = position_stack(vjust=0.6, reverse = TRUE))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "Taiwan COVID Deaths",
-       subtitle = "Updated June 23rd, 2021 / Tracking began on May 21st, 2021",
+       subtitle = "Updated June 24th, 2021 / Tracking began on May 21st, 2021",
        caption = "Source: Taiwan CDC")
 
 
@@ -65,16 +65,16 @@ lbls <- c("Female", "Male") %>%
   paste("",slices) %>%
   paste0("","%")
 pie(slices, lbls, main = "Gender Percentage Split", 
-    col = brewer.pal(2, "Set2")) 
+    col = brewer.pal(2, "Pastel2")) 
 
 # chronic split
-slices <- c(chronic_pct,und_chronic_pct, non_chronic_pct) 
-lbls <- c("Has Chronic Conditions", "Chronic Conditions Undetermined", 
+slices <- c(und_chronic_pct,chronic_pct, non_chronic_pct) 
+lbls <- c("Chronic Conditions Uncertain", "Has Chronic Conditions", 
           "No Chronic Conditions") %>%
   paste(slices) %>%
   paste0("%")
 pie(slices, lbls, main = "Chronic Conditions Percentage Split", 
-    col = brewer.pal(3, "Set2"))
+    col = brewer.pal(3, "Pastel2"))
 
 # Age split (pies are bad for this)
 
@@ -97,9 +97,10 @@ full_stats %>%
   gather(Chronic_Condition, Deaths, c("Has_Chronic_Condition", "No_Chronic_Condition", 
                            "Chronic_Condition_Uncertain")) %>%
   ggplot(aes(x = Date, y = Deaths, fill = Chronic_Condition, label = Deaths)) + 
-  geom_bar(stat = "identity", position = position_stack(reverse = TRUE)) +
-  geom_text(size = 3, position = position_stack(vjust = 0.6, reverse = TRUE)) + 
+  geom_bar(stat = "identity") +
+  geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
+  scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
   labs(title = "Deaths By Chronic Condition", 
        caption = "Source: Taiwan CDC")
 
