@@ -120,11 +120,12 @@ duration <- master %>%
   mutate_at(date_variables, date.format)
 
 write.csv(duration, "Durations.csv")
+
 # Code above allows for reproduction of the entire database up til 
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("june23.pdf")
+today <- extract_tables("june24.pdf")
 pages_today <- as.data.frame(today[[1]])
 pages_today <- pages_today[-1,2:12]
 
@@ -155,7 +156,7 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   arrange(Date)
 
 ##### Output #####
-write.csv(compare, "Daily_changes/Daily_change_June_23.csv")
+write.csv(compare, "Daily_changes/Daily_change_June_24.csv")
 
 
 
