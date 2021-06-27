@@ -33,21 +33,21 @@ Each day's new added deaths are stored in the [**daily_changes**](https://github
 
 ## Example outputs
 
-Here are example plots (from June 26th, with 13 deaths reported), indicating newly added deaths reported today, in English:
+Here are example plots (from June 27th, with 9 deaths reported), indicating newly added deaths reported today, in English:
 
-![](plots/plot_june26.png)
+![](plots/plot_june27.png)
 
 and in Traditional Chinese:
   
-![](plots/tw_plots/tw_plot_june26.png)
+![](plots/tw_plots/tw_plot_june27.png)
 
 As well as grouping statistics for Age, Gender, and Chronic Conditions (June 24).
 
-![](plots/stat_plots/age_plot_june26.png)
+![](plots/stat_plots/age_plot_june27.png)
 
-![](plots/stat_plots/gender_plot_june26.png)
+![](plots/stat_plots/gender_plot_june27.png)
 
-![](plots/stat_plots/chronic_plot_june26.png)
+![](plots/stat_plots/chronic_plot_june27.png)
 
 Bonus pie charts for breakdowns: 
 ![](plots/stat_plots/chronic_pie_june26.png)
