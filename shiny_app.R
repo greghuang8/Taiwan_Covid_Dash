@@ -8,7 +8,7 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
   select(-X) %>%
   na_if(0)
 
-daily_change <- read.csv("daily_changes/Daily_change_June_26.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_June_27.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
@@ -29,7 +29,7 @@ daily_change_tw %>%
   geom_text(size = 3, position = position_stack(vjust=0.6))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "臺灣新冠肺炎死亡案例統計",
-       subtitle = "2021年6月26日更新 / 5月21日開始追蹤",
+       subtitle = "2021年6月27日更新 / 5月21日開始追蹤",
        caption = "資料來源: 臺灣衛生福利部疾病管制署")
 
 
@@ -42,7 +42,7 @@ daily_change %>%
   geom_text(size = 3, position = position_stack(vjust=0.6, reverse = TRUE))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "Taiwan COVID Deaths",
-       subtitle = "Updated June 26th, 2021 / Tracking began on May 21st, 2021",
+       subtitle = "Updated June 27th, 2021 / Tracking began on May 21st, 2021",
        caption = "Source: Taiwan CDC")
 
 
