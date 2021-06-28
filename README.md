@@ -41,7 +41,7 @@ and in Traditional Chinese:
   
 ![](plots/tw_plots/tw_plot_june28.png)
 
-As well as grouping statistics for Age, Gender, and Chronic Conditions (June 24).
+As well as grouping statistics for Age, Gender, and Chronic Conditions (same day).
 
 ![](plots/stat_plots/age_plot_june28.png)
 
