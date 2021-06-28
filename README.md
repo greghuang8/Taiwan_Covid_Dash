@@ -8,7 +8,7 @@ Taiwan Time (GMT +8).
 Many of the deaths reported in the daily release are records from previous days; 
 sometimes they can lag up to 10 days, although that seems to be improving. The 
 purpose of this project is to tally up the deaths by its reporting date instead
-of the date of the news release. Additionally, other statstics, such as the age 
+of the date of the news release. Additionally, other statistics, such as the age 
 and gender splits of the deaths are also considered. 
 
 Currently, a daily update of **total** COVID deaths since I started tracking, 
@@ -33,21 +33,21 @@ Each day's new added deaths are stored in the [**daily_changes**](https://github
 
 ## Example outputs
 
-Here are example plots (from June 27th, with 9 deaths reported), indicating newly added deaths reported today, in English:
+Here are example plots (from June 28th, with 3 deaths reported), indicating newly added deaths reported today, in English:
 
-![](plots/plot_june27.png)
+![](plots/plot_june28.png)
 
 and in Traditional Chinese:
   
-![](plots/tw_plots/tw_plot_june27.png)
+![](plots/tw_plots/tw_plot_june28.png)
 
 As well as grouping statistics for Age, Gender, and Chronic Conditions (June 24).
 
-![](plots/stat_plots/age_plot_june27.png)
+![](plots/stat_plots/age_plot_june28.png)
 
-![](plots/stat_plots/gender_plot_june27.png)
+![](plots/stat_plots/gender_plot_june28.png)
 
-![](plots/stat_plots/chronic_plot_june27.png)
+![](plots/stat_plots/chronic_plot_june28.png)
 
 Bonus pie charts for breakdowns: 
 ![](plots/stat_plots/chronic_pie_june26.png)
