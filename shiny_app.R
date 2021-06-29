@@ -8,6 +8,9 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
   select(-X) %>%
   na_if(0)
 
+duration_stats <- read.csv("Durations.csv", header = TRUE, 
+                           stringsAsFactors = FALSE)
+
 daily_change <- read.csv("daily_changes/Daily_change_June_28.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
@@ -76,9 +79,6 @@ lbls <- c("Chronic Conditions Uncertain", "Has Chronic Conditions",
 pie(slices, lbls, main = "Chronic Conditions Percentage Split", 
     col = brewer.pal(3, "Pastel2"))
 
-# Age split (pies are bad for this)
-
-  
 
 # Stacked bars for each category
 # Gender
@@ -96,6 +96,7 @@ full_stats %>%
 full_stats %>%
   gather(Chronic_Condition, Deaths, c("Has_Chronic_Condition", "No_Chronic_Condition", 
                            "Chronic_Condition_Uncertain")) %>%
+  mutate(Chronic_Condition = str_replace_all(Chronic_Condition, "_"," ")) %>%
   ggplot(aes(x = Date, y = Deaths, fill = Chronic_Condition, label = Deaths)) + 
   geom_bar(stat = "identity") +
   geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
@@ -105,18 +106,72 @@ full_stats %>%
        caption = "Source: Taiwan CDC")
 
 # Age
+ages <- full_stats %>%
+  select(starts_with("Age"))
+num_colors <- ncol(ages) 
+
 full_stats %>%
   select(starts_with(c("Date","Deaths", "Age"))) %>%
   gather(Age_Group, Deaths, c(starts_with("Age"))) %>%
+  mutate(Age_Group = str_extract(Age_Group, "[[:digit:]]+"))%>%
+  mutate(Age_Group = str_c(Age_Group, "+")) %>%
   ggplot(aes(x = Date, y = Deaths, fill = Age_Group, label = Deaths)) + 
   geom_bar(stat = "identity", position = position_stack(reverse = TRUE)) +
   geom_text(size = 3, position = position_stack(vjust = 0.6, reverse = TRUE)) + 
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
-  scale_fill_manual(values = brewer.pal(8, "Set3"))+
+  scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
   labs(title = "Deaths By Age Group", 
        caption = "Source: Taiwan CDC") 
 
+
 # Grouped statistics
+
+full_stats_group <- full_stats
+full_stats_group[is.na(full_stats_group)] <- 0
+# make new data frame from sums of each column 
+Categories <- c(colnames(full_stats_group)[-c(1,2)])
+Deaths <- numeric(0)
+for (item in Categories){
+  Deaths <- append(Deaths, sum(full_stats_group[[item]]))
+}
+Parameters <- c(rep("Gender",2), rep("Chronic Condition",3), 
+              rep("Age",length(Categories)-5)) 
+grouped_stats <- data.frame(Categories,Deaths,Parameters)
+grouped_stats <- grouped_stats %>%
+  mutate(Deaths_pct = as.character(round(Deaths/total_deaths*100,1)))%>%
+  mutate(Deaths_pct = str_c(Deaths_pct,"%"))
+
+
+#Age
+grouped_stats %>%
+  filter(Parameters == "Age") %>%
+  mutate(Age = str_extract(Categories, "[[:digit:]]+"))%>%
+  arrange(Age) %>%
+  mutate(Age = str_c(Age, "+"))%>%
+  ggplot(aes(x=Age, y=Deaths)) + 
+  geom_bar(stat = "identity")+
+  geom_text(aes(label = Deaths_pct), vjust = 0.5, hjust = -0.2)+
+  coord_flip()
+
+#Gender
+grouped_stats %>%
+  filter(Parameters == "Gender") %>%
+  mutate(Gender = Categories) %>%
+  ggplot(aes(x = Gender, y = Deaths))+
+  geom_bar(stat = 'identity', width = 0.4)+
+  geom_text(aes(label = Deaths), vjust = 0.5, hjust = -0.2)+
+  coord_flip()
+
+#Chronic Condition 
+grouped_stats %>%
+  filter(Parameters == "Chronic Condition") %>%
+  mutate(Chronic_Condition = Categories) %>%
+  mutate(Chronic_Condition = str_replace_all(Chronic_Condition, "_", " "))%>%
+  ggplot(aes(x = Chronic_Condition, y = Deaths))+
+  geom_text(aes(label = Deaths), vjust = 0.5, hjust = -0.2)+
+  geom_bar(stat = 'identity', width = 0.5)+  
+  coord_flip()
+
 
 
 # Define UI for application that draws a histogram
@@ -133,7 +188,6 @@ ui <- fluidPage(
                   min = 1,
                   max = 50,
                   value = 30),
-      checkboxInput("")
     ),
     
     # Show a plot of the generated distribution
@@ -148,11 +202,13 @@ server <- function(input, output) {
   
   output$distPlot <- renderPlot({
     # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2]
+    x    <- duration_stats$DTD
     bins <- seq(min(x), max(x), length.out = input$bins + 1)
     
     # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
+    hist(x, breaks = bins, col = 'darkgray', border = 'white', 
+         main = "Days Elapsed Between Testing Positive and Dying",
+         xlab = "Elapsed Days")
   })
 }
 
