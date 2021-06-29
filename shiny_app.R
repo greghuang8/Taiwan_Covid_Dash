@@ -11,7 +11,7 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 duration_stats <- read.csv("Durations.csv", header = TRUE, 
                            stringsAsFactors = FALSE)
 
-daily_change <- read.csv("daily_changes/Daily_change_June_28.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_June_29.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
@@ -149,9 +149,10 @@ grouped_stats %>%
   arrange(Age) %>%
   mutate(Age = str_c(Age, "+"))%>%
   ggplot(aes(x=Age, y=Deaths)) + 
-  geom_bar(stat = "identity")+
+  geom_bar(stat = "identity", fill = "cornflowerblue", width = 0.8)+
   geom_text(aes(label = Deaths_pct), vjust = 0.5, hjust = -0.2)+
-  coord_flip()
+  coord_flip()+
+  labs(title = "Deaths By Age Group") 
 
 #Gender
 grouped_stats %>%
@@ -159,8 +160,7 @@ grouped_stats %>%
   mutate(Gender = Categories) %>%
   ggplot(aes(x = Gender, y = Deaths))+
   geom_bar(stat = 'identity', width = 0.4)+
-  geom_text(aes(label = Deaths), vjust = 0.5, hjust = -0.2)+
-  coord_flip()
+  geom_text(aes(label = Deaths), vjust = 0.5, hjust = -0.2)
 
 #Chronic Condition 
 grouped_stats %>%
@@ -169,9 +169,7 @@ grouped_stats %>%
   mutate(Chronic_Condition = str_replace_all(Chronic_Condition, "_", " "))%>%
   ggplot(aes(x = Chronic_Condition, y = Deaths))+
   geom_text(aes(label = Deaths), vjust = 0.5, hjust = -0.2)+
-  geom_bar(stat = 'identity', width = 0.5)+  
-  coord_flip()
-
+  geom_bar(stat = 'identity', width = 0.5)
 
 
 # Define UI for application that draws a histogram
