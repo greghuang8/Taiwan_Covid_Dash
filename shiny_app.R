@@ -11,7 +11,7 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 duration_stats <- read.csv("Durations.csv", header = TRUE, 
                            stringsAsFactors = FALSE)
 
-daily_change <- read.csv("daily_changes/Daily_change_June_29.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_June_30.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
@@ -32,7 +32,7 @@ daily_change_tw %>%
   geom_text(size = 3, position = position_stack(vjust=0.6))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "臺灣新冠肺炎死亡案例統計",
-       subtitle = "2021年6月28日更新 / 5月21日開始追蹤",
+       subtitle = "2021年6月30日更新 / 5月21日開始追蹤",
        caption = "資料來源: 臺灣衛生福利部疾病管制署")
 
 
@@ -45,7 +45,7 @@ daily_change %>%
   geom_text(size = 3, position = position_stack(vjust=0.6, reverse = TRUE))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "Taiwan COVID Deaths",
-       subtitle = "Updated June 28th, 2021 / Tracking began on May 21st, 2021",
+       subtitle = "Updated June 30th, 2021 / Tracking began on May 21st, 2021",
        caption = "Source: Taiwan CDC")
 
 
@@ -61,23 +61,23 @@ und_chronic_pct <- round(
   sum(full_stats$Chronic_Condition_Uncertain, na.rm = TRUE)/total_deaths * 100)
 non_chronic_pct <- 100 - chronic_pct - und_chronic_pct
 
-# Quick Pie Charts
-# gender split
-slices <- c(female_pct, male_pct)
-lbls <- c("Female", "Male") %>%
-  paste("",slices) %>%
-  paste0("","%")
-pie(slices, lbls, main = "Gender Percentage Split", 
-    col = brewer.pal(2, "Pastel2")) 
+### Quick Pie Charts (commented out)
+### gender split
+# slices <- c(female_pct, male_pct)
+# lbls <- c("Female", "Male") %>%
+#   paste("",slices) %>%
+#   paste0("","%")
+# pie(slices, lbls, main = "Gender Percentage Split", 
+#     col = brewer.pal(2, "Pastel2")) 
 
-# chronic split
-slices <- c(und_chronic_pct,chronic_pct, non_chronic_pct) 
-lbls <- c("Chronic Conditions Uncertain", "Has Chronic Conditions", 
-          "No Chronic Conditions") %>%
-  paste(slices) %>%
-  paste0("%")
-pie(slices, lbls, main = "Chronic Conditions Percentage Split", 
-    col = brewer.pal(3, "Pastel2"))
+### chronic split
+# slices <- c(und_chronic_pct,chronic_pct, non_chronic_pct) 
+# lbls <- c("Chronic Conditions Uncertain", "Has Chronic Conditions", 
+#           "No Chronic Conditions") %>%
+#   paste(slices) %>%
+#   paste0("%")
+# pie(slices, lbls, main = "Chronic Conditions Percentage Split", 
+#     col = brewer.pal(3, "Pastel2"))
 
 
 # Stacked bars for each category
@@ -89,8 +89,9 @@ full_stats %>%
   geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
-  labs(title = "Deaths By Gender", 
-       caption = "Source: Taiwan CDC")
+  labs(title = "Distribution of Deaths by Gender", 
+       caption = "Source: Taiwan CDC",
+       subtitle = "Sorted by Date of Death") 
 
 # Chronic
 full_stats %>%
@@ -102,29 +103,39 @@ full_stats %>%
   geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
-  labs(title = "Deaths By Chronic Condition", 
-       caption = "Source: Taiwan CDC")
+  labs(title = "Distribution of Deaths by Chronic Condition", 
+       caption = "Source: Taiwan CDC",
+       subtitle = "Sorted by Date of Death",
+       fill = "Chronic Condition") 
 
 # Age
 ages <- full_stats %>%
   select(starts_with("Age"))
 num_colors <- ncol(ages) 
 
-full_stats %>%
+age_stacked_stats <- full_stats %>%
   select(starts_with(c("Date","Deaths", "Age"))) %>%
   gather(Age_Group, Deaths, c(starts_with("Age"))) %>%
   mutate(Age_Group = str_extract(Age_Group, "[[:digit:]]+"))%>%
-  mutate(Age_Group = str_c(Age_Group, "+")) %>%
-  ggplot(aes(x = Date, y = Deaths, fill = Age_Group, label = Deaths)) + 
+  mutate(Age_Group = str_c(Age_Group, "+"))
+
+age_stacked_stats$Age_Group <- factor(age_stacked_stats$Age_Group,
+                                      levels = unique(age_stacked_stats$Age_Group))
+
+age_stacked_stats %>%
+  ggplot(aes(x = Date, y = Deaths, fill = Age_Group,
+             label = Deaths)) + 
   geom_bar(stat = "identity", position = position_stack(reverse = TRUE)) +
   geom_text(size = 3, position = position_stack(vjust = 0.6, reverse = TRUE)) + 
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
-  labs(title = "Deaths By Age Group", 
-       caption = "Source: Taiwan CDC") 
+  labs(title = "Distribution of Deaths by Age Group", 
+       caption = "Source: Taiwan CDC",
+       subtitle = "Sorted by Date of Death",
+       fill = "Age Group") 
 
 
-# Grouped statistics
+##### Grouped statistics #####
 
 full_stats_group <- full_stats
 full_stats_group[is.na(full_stats_group)] <- 0
@@ -141,35 +152,48 @@ grouped_stats <- grouped_stats %>%
   mutate(Deaths_pct = as.character(round(Deaths/total_deaths*100,1)))%>%
   mutate(Deaths_pct = str_c(Deaths_pct,"%"))
 
+grouped_stats$Categories <- factor(grouped_stats$Categories, 
+                                   levels = grouped_stats$Categories)
 
 #Age
-grouped_stats %>%
+age_grouped_stats <- grouped_stats %>%
   filter(Parameters == "Age") %>%
   mutate(Age = str_extract(Categories, "[[:digit:]]+"))%>%
-  arrange(Age) %>%
-  mutate(Age = str_c(Age, "+"))%>%
-  ggplot(aes(x=Age, y=Deaths)) + 
-  geom_bar(stat = "identity", fill = "cornflowerblue", width = 0.8)+
-  geom_text(aes(label = Deaths_pct), vjust = 0.5, hjust = -0.2)+
-  coord_flip()+
-  labs(title = "Deaths By Age Group") 
+  mutate(Age = str_c(Age, "+"))
+
+#lock in factors
+age_grouped_stats$Age <- factor(age_grouped_stats$Age, 
+                                levels = age_grouped_stats$Age)
+age_grouped_stats %>%
+  ggplot(aes(x=Age, y=Deaths, fill = Age)) + 
+  geom_bar(stat = "identity", width = 0.8)+
+  geom_text(aes(label = Deaths_pct), vjust = -0.5)+
+  scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
+  labs(title = "Deaths By Age Group",
+       fill = "Age Group") 
 
 #Gender
 grouped_stats %>%
   filter(Parameters == "Gender") %>%
   mutate(Gender = Categories) %>%
-  ggplot(aes(x = Gender, y = Deaths))+
+  ggplot(aes(x = Gender, y = Deaths, fill = Gender))+
   geom_bar(stat = 'identity', width = 0.4)+
-  geom_text(aes(label = Deaths), vjust = 0.5, hjust = -0.2)
+  geom_text(aes(label = Deaths_pct), vjust = -0.5, hjust = 0.5)+
+  scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
+  labs(title = "Deaths by Gender Split")
 
 #Chronic Condition 
 grouped_stats %>%
   filter(Parameters == "Chronic Condition") %>%
   mutate(Chronic_Condition = Categories) %>%
   mutate(Chronic_Condition = str_replace_all(Chronic_Condition, "_", " "))%>%
-  ggplot(aes(x = Chronic_Condition, y = Deaths))+
-  geom_text(aes(label = Deaths), vjust = 0.5, hjust = -0.2)+
-  geom_bar(stat = 'identity', width = 0.5)
+  ggplot(aes(x = Chronic_Condition, y = Deaths, fill = Chronic_Condition))+
+  geom_text(aes(label = Deaths_pct), vjust = -0.5, hjust = 0.5)+
+  geom_bar(stat = 'identity', width = 0.5)+
+  scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
+  labs(title = "Deaths by Chronic Conditions",
+       fill = "Chronic Condition",
+       x = "Status")
 
 
 # Define UI for application that draws a histogram
@@ -206,7 +230,8 @@ server <- function(input, output) {
     # draw the histogram with the specified number of bins
     hist(x, breaks = bins, col = 'darkgray', border = 'white', 
          main = "Days Elapsed Between Testing Positive and Dying",
-         xlab = "Elapsed Days")
+         xlab = "Elapsed Days",
+         labels = TRUE)
   })
 }
 
