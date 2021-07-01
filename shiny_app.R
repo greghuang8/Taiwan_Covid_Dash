@@ -11,7 +11,7 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 duration_stats <- read.csv("Durations.csv", header = TRUE, 
                            stringsAsFactors = FALSE)
 
-daily_change <- read.csv("daily_changes/Daily_change_June_30.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_July_1.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
@@ -21,6 +21,8 @@ colnames(daily_change) = c("Date", "Deaths Previously Reported",
 daily_change_tw <- daily_change
 colnames(daily_change_tw) = c("Date", "死亡案例", "今日回報新增死亡案例",
                               "Updated Total Deaths")
+
+today_date <- "July 1"
 
 ##### Part 1: Daily death counts plotted #####
 # Death count plots w/ today's additions (Chinese version)
@@ -32,7 +34,7 @@ daily_change_tw %>%
   geom_text(size = 3, position = position_stack(vjust=0.6))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "臺灣新冠肺炎死亡案例統計",
-       subtitle = "2021年6月30日更新 / 5月21日開始追蹤",
+       subtitle = "2021年7月1日更新 / 5月21日開始追蹤",
        caption = "資料來源: 臺灣衛生福利部疾病管制署")
 
 
@@ -45,7 +47,7 @@ daily_change %>%
   geom_text(size = 3, position = position_stack(vjust=0.6, reverse = TRUE))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "Taiwan COVID Deaths",
-       subtitle = "Updated June 30th, 2021 / Tracking began on May 21st, 2021",
+       subtitle = "Updated July 1, 2021 / Tracking began on May 21st, 2021",
        caption = "Source: Taiwan CDC")
 
 
@@ -90,7 +92,7 @@ full_stats %>%
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
   labs(title = "Distribution of Deaths by Gender", 
-       caption = "Source: Taiwan CDC",
+       caption = str_c("Source: Taiwan CDC; Updated ",today_date),
        subtitle = "Sorted by Date of Death") 
 
 # Chronic
@@ -104,7 +106,7 @@ full_stats %>%
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
   labs(title = "Distribution of Deaths by Chronic Condition", 
-       caption = "Source: Taiwan CDC",
+       caption = str_c("Source: Taiwan CDC; Updated ",today_date),
        subtitle = "Sorted by Date of Death",
        fill = "Chronic Condition") 
 
@@ -130,7 +132,7 @@ age_stacked_stats %>%
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
   labs(title = "Distribution of Deaths by Age Group", 
-       caption = "Source: Taiwan CDC",
+       caption = str_c("Source: Taiwan CDC; Updated ",today_date),
        subtitle = "Sorted by Date of Death",
        fill = "Age Group") 
 
@@ -170,7 +172,8 @@ age_grouped_stats %>%
   geom_text(aes(label = Deaths_pct), vjust = -0.5)+
   scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
   labs(title = "Deaths By Age Group",
-       fill = "Age Group") 
+       fill = "Age Group",
+       caption = str_c("Source: Taiwan CDC; Updated ",today_date)) 
 
 #Gender
 grouped_stats %>%
@@ -180,7 +183,8 @@ grouped_stats %>%
   geom_bar(stat = 'identity', width = 0.4)+
   geom_text(aes(label = Deaths_pct), vjust = -0.5, hjust = 0.5)+
   scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
-  labs(title = "Deaths by Gender Split")
+  labs(title = "Deaths by Gender Split", 
+       caption = str_c("Source: Taiwan CDC; Updated ",today_date))
 
 #Chronic Condition 
 grouped_stats %>%
@@ -193,7 +197,8 @@ grouped_stats %>%
   scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
   labs(title = "Deaths by Chronic Conditions",
        fill = "Chronic Condition",
-       x = "Status")
+       x = "Status",
+       caption = str_c("Source: Taiwan CDC; Updated ",today_date))
 
 
 # Define UI for application that draws a histogram
@@ -206,7 +211,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       sliderInput("bins",
-                  "Number of bins:",
+                  "Set number of bins:",
                   min = 1,
                   max = 50,
                   value = 30),
