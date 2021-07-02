@@ -59,6 +59,10 @@ for(item in list.files("pdf")){
   
 }
 
+# take out an incorrect death count (july 2)
+master <- master %>%
+  filter(CaseNum != "12132")
+
 ##### Analytics for MASTER data #####
 analytics <- master %>%
   mutate(Age = str_extract_all(Age,"[0-9]+"))%>%
@@ -126,7 +130,7 @@ write.csv(duration, "Durations.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("july1.pdf")
+today <- extract_tables("july2.pdf")
 pages_today <- as.data.frame(today[[1]])
 pages_today <- pages_today[-1,2:12]
 
@@ -141,6 +145,9 @@ if(length(today) > 1) {
 colnames(pages_today) <- c("CaseNum","Gender","Age","Chronic","History",
                          "SymptomDate", "Symptoms","TestDate",
                          "QuarantineDate","ConfirmDate","DOD")
+
+pages_today <- pages_today %>%
+  filter(CaseNum != "12132")
 
 ##### Compare today's deaths to master #####
 deaths_old <- deaths
@@ -157,7 +164,7 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   arrange(Date)
 
 ##### Output #####
-write.csv(compare, "Daily_changes/Daily_change_July_1.csv")
+write.csv(compare, "Daily_changes/Daily_change_July_2.csv")
 
 
 

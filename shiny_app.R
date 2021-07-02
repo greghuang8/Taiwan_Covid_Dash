@@ -11,7 +11,7 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 duration_stats <- read.csv("Durations.csv", header = TRUE, 
                            stringsAsFactors = FALSE)
 
-daily_change <- read.csv("daily_changes/Daily_change_July_1.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_July_2.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
@@ -22,7 +22,7 @@ daily_change_tw <- daily_change
 colnames(daily_change_tw) = c("Date", "死亡案例", "今日回報新增死亡案例",
                               "Updated Total Deaths")
 
-today_date <- "July 1"
+today_date <- "July 2"
 
 ##### Part 1: Daily death counts plotted #####
 # Death count plots w/ today's additions (Chinese version)
@@ -34,8 +34,11 @@ daily_change_tw %>%
   geom_text(size = 3, position = position_stack(vjust=0.6))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "臺灣新冠肺炎死亡案例統計",
-       subtitle = "2021年7月1日更新 / 5月21日開始追蹤",
-       caption = "資料來源: 臺灣衛生福利部疾病管制署")
+       subtitle = "2021年7月2日更新 / 5月21日開始追蹤",
+       caption = "資料來源: 臺灣衛生福利部疾病管制署",
+       x = "日期",
+       y = "死亡案例數",
+       fill = "")
 
 
 # English version 
@@ -47,7 +50,7 @@ daily_change %>%
   geom_text(size = 3, position = position_stack(vjust=0.6, reverse = TRUE))+
   theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
   labs(title = "Taiwan COVID Deaths",
-       subtitle = "Updated July 1, 2021 / Tracking began on May 21st, 2021",
+       subtitle = "Updated July 2, 2021 / Tracking began on May 21st, 2021",
        caption = "Source: Taiwan CDC")
 
 
