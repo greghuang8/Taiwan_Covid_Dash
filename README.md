@@ -19,6 +19,12 @@ Note that since I did not start collecting data from Taiwan CDC until late May,
 and there were no similar news releases that contained data prior to May 21st,
 this project under reports 59 deaths that occurred before this date. 
 
+Additionally, 1 more death is not counted for July 2, where a death was recorded
+on the official release but the cause of death was ruled to be unrelated to COVID. 
+Please see the July 2nd pdf for more information. Things brings the total difference
+between this project and Taiwan's official death counts to 60. 
+
+
 Special thanks to [@xyk2](https://github.com/xyk2) for the idea to snap true 
 dates of death from the daily news releases. 
 
@@ -33,13 +39,13 @@ Each day's new added deaths are stored in the [**daily_changes**](https://github
 
 ## Example outputs
 
-Here are example plots (from July 1, with 13 deaths reported), indicating newly added deaths reported today, in English:
+Here are example plots (from July 2, with 14 deaths reported), indicating newly added deaths reported today, in English:
 
-![](plots/plot_july1.png)
+![](plots/plot_july2.png)
 
 and in Traditional Chinese:
   
-![](plots/tw_plots/tw_plot_july1.png)
+![](plots/tw_plots/tw_plot_july2.png)
 
 As well as grouping statistics for Age, Gender, and Chronic Conditions (June 29).
 
