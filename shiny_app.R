@@ -22,98 +22,14 @@ daily_change_tw <- daily_change
 colnames(daily_change_tw) = c("Date", "死亡案例", "今日回報新增死亡案例",
                               "Updated Total Deaths")
 
-today_date <- "July 2"
 
-##### Part 1: Daily death counts plotted #####
-# Death count plots w/ today's additions (Chinese version)
-daily_change_tw %>%
-  gather(Category, Deaths, c("死亡案例",
-                             "今日回報新增死亡案例"))%>%
-  ggplot(aes(x = Date, y = Deaths , fill = Category, label = Deaths)) +
-  geom_bar(stat = "identity")+
-  geom_text(size = 3, position = position_stack(vjust=0.6))+
-  theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
-  labs(title = "臺灣新冠肺炎死亡案例統計",
-       subtitle = "2021年7月2日更新 / 5月21日開始追蹤",
-       caption = "資料來源: 臺灣衛生福利部疾病管制署",
-       x = "日期",
-       y = "死亡案例數",
-       fill = "")
-
-
-# English version 
-daily_change %>%
-  gather(Category, Deaths, c("Deaths Previously Reported",
-                             "Deaths Reported Today"))%>%
-  ggplot(aes(x = Date, y = Deaths , fill = Category, label = Deaths)) +
-  geom_bar(stat = "identity", position = position_stack(reverse = TRUE))+
-  geom_text(size = 3, position = position_stack(vjust=0.6, reverse = TRUE))+
-  theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
-  labs(title = "Taiwan COVID Deaths",
-       subtitle = "Updated July 2, 2021 / Tracking began on May 21st, 2021",
-       caption = "Source: Taiwan CDC")
-
-
-
-##### Part 2: General Statistics #####
-# Various percentages fro Shiny display purposes
+# Various numbers Shiny display purposes
 total_deaths <- sum(full_stats$Deaths)
-female_pct <- round(sum(full_stats$Female, na.rm = TRUE)/total_deaths * 100) 
-male_pct <- 100-female_pct
-chronic_pct <- round(sum(full_stats$Has_Chronic_Condition, 
-                         na.rm = TRUE)/total_deaths * 100)
-und_chronic_pct <- round(
-  sum(full_stats$Chronic_Condition_Uncertain, na.rm = TRUE)/total_deaths * 100)
-non_chronic_pct <- 100 - chronic_pct - und_chronic_pct
+new_deaths <- sum(daily_change$`Deaths Reported Today`)
+today_date <- "2021/07/02"
 
-### Quick Pie Charts (commented out)
-### gender split
-# slices <- c(female_pct, male_pct)
-# lbls <- c("Female", "Male") %>%
-#   paste("",slices) %>%
-#   paste0("","%")
-# pie(slices, lbls, main = "Gender Percentage Split", 
-#     col = brewer.pal(2, "Pastel2")) 
-
-### chronic split
-# slices <- c(und_chronic_pct,chronic_pct, non_chronic_pct) 
-# lbls <- c("Chronic Conditions Uncertain", "Has Chronic Conditions", 
-#           "No Chronic Conditions") %>%
-#   paste(slices) %>%
-#   paste0("%")
-# pie(slices, lbls, main = "Chronic Conditions Percentage Split", 
-#     col = brewer.pal(3, "Pastel2"))
-
-
-# Stacked bars for each category
-# Gender
-full_stats %>%
-  gather(Gender, Deaths, c("Female", "Male")) %>%
-  ggplot(aes(x = Date, y = Deaths, fill = Gender, label = Deaths)) + 
-  geom_bar(stat = "identity") +
-  geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
-  theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
-  scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
-  labs(title = "Distribution of Deaths by Gender", 
-       caption = str_c("Source: Taiwan CDC; Updated ",today_date),
-       subtitle = "Sorted by Date of Death") 
-
-# Chronic
-full_stats %>%
-  gather(Chronic_Condition, Deaths, c("Has_Chronic_Condition", "No_Chronic_Condition", 
-                           "Chronic_Condition_Uncertain")) %>%
-  mutate(Chronic_Condition = str_replace_all(Chronic_Condition, "_"," ")) %>%
-  ggplot(aes(x = Date, y = Deaths, fill = Chronic_Condition, label = Deaths)) + 
-  geom_bar(stat = "identity") +
-  geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
-  theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
-  scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
-  labs(title = "Distribution of Deaths by Chronic Condition", 
-       caption = str_c("Source: Taiwan CDC; Updated ",today_date),
-       subtitle = "Sorted by Date of Death",
-       fill = "Chronic Condition") 
-
-# Age
+# Prep some tables for plotting
+# Age - lock in factors
 ages <- full_stats %>%
   select(starts_with("Age"))
 num_colors <- ncol(ages) 
@@ -127,21 +43,7 @@ age_stacked_stats <- full_stats %>%
 age_stacked_stats$Age_Group <- factor(age_stacked_stats$Age_Group,
                                       levels = unique(age_stacked_stats$Age_Group))
 
-age_stacked_stats %>%
-  ggplot(aes(x = Date, y = Deaths, fill = Age_Group,
-             label = Deaths)) + 
-  geom_bar(stat = "identity", position = position_stack(reverse = TRUE)) +
-  geom_text(size = 3, position = position_stack(vjust = 0.6, reverse = TRUE)) + 
-  theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
-  scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
-  labs(title = "Distribution of Deaths by Age Group", 
-       caption = str_c("Source: Taiwan CDC; Updated ",today_date),
-       subtitle = "Sorted by Date of Death",
-       fill = "Age Group") 
-
-
-##### Grouped statistics #####
-
+# Prep table for group plotting
 full_stats_group <- full_stats
 full_stats_group[is.na(full_stats_group)] <- 0
 # make new data frame from sums of each column 
@@ -160,48 +62,14 @@ grouped_stats <- grouped_stats %>%
 grouped_stats$Categories <- factor(grouped_stats$Categories, 
                                    levels = grouped_stats$Categories)
 
-#Age
+#Age - lock in factors
 age_grouped_stats <- grouped_stats %>%
   filter(Parameters == "Age") %>%
   mutate(Age = str_extract(Categories, "[[:digit:]]+"))%>%
   mutate(Age = str_c(Age, "+"))
-
-#lock in factors
 age_grouped_stats$Age <- factor(age_grouped_stats$Age, 
                                 levels = age_grouped_stats$Age)
-age_grouped_stats %>%
-  ggplot(aes(x=Age, y=Deaths, fill = Age)) + 
-  geom_bar(stat = "identity", width = 0.8)+
-  geom_text(aes(label = Deaths_pct), vjust = -0.5)+
-  scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
-  labs(title = "Deaths By Age Group",
-       fill = "Age Group",
-       caption = str_c("Source: Taiwan CDC; Updated ",today_date)) 
 
-#Gender
-grouped_stats %>%
-  filter(Parameters == "Gender") %>%
-  mutate(Gender = Categories) %>%
-  ggplot(aes(x = Gender, y = Deaths, fill = Gender))+
-  geom_bar(stat = 'identity', width = 0.4)+
-  geom_text(aes(label = Deaths_pct), vjust = -0.5, hjust = 0.5)+
-  scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
-  labs(title = "Deaths by Gender Split", 
-       caption = str_c("Source: Taiwan CDC; Updated ",today_date))
-
-#Chronic Condition 
-grouped_stats %>%
-  filter(Parameters == "Chronic Condition") %>%
-  mutate(Chronic_Condition = Categories) %>%
-  mutate(Chronic_Condition = str_replace_all(Chronic_Condition, "_", " "))%>%
-  ggplot(aes(x = Chronic_Condition, y = Deaths, fill = Chronic_Condition))+
-  geom_text(aes(label = Deaths_pct), vjust = -0.5, hjust = 0.5)+
-  geom_bar(stat = 'identity', width = 0.5)+
-  scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
-  labs(title = "Deaths by Chronic Conditions",
-       fill = "Chronic Condition",
-       x = "Status",
-       caption = str_c("Source: Taiwan CDC; Updated ",today_date))
 
 
 # Define UI for application that draws a histogram
@@ -210,27 +78,222 @@ ui <- fluidPage(
   # Application title
   titlePanel("COVID Deaths in Taiwan"),
   
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("bins",
-                  "Set number of bins:",
-                  min = 1,
-                  max = 50,
-                  value = 30),
-    ),
+  tabsetPanel(
+    tabPanel("Welcome",includeMarkdown("README.md")),
     
-    # Show a plot of the generated distribution
-    mainPanel(
-      plotOutput("distPlot")
-    )
+    tabPanel("Today's Release",
+             br(),
+             sidebarLayout(
+               sidebarPanel(h4("Today's Release"),
+                            p(str_c("This panel to the right reports on the ",
+                                    "latest status of COVID deaths in Taiwan, ",
+                                    "followed by graphs illustrating daily counts."))),
+               mainPanel(
+                 h5(tags$b("Total Deaths Reported: "),
+                    textOutput("total_deaths", inline = TRUE)),
+                 h5(tags$b("New Deaths Reported Today: "),
+                    textOutput("new_deaths", inline = TRUE)),
+                 h5(tags$b("Last Updated: "),
+                    textOutput("update_date", inline = TRUE)),
+                 br(),
+                 p(str_c("Note: This module contains 60 fewer deaths compared ",
+                         "to the actual total deaths, as data prior to 5/21 ",
+                         "is not avaiable for analysis. Please see the ",
+                         "Welcome page for more information. "))
+                 )
+               ),
+             hr(),
+             h4("English Version"),
+             plotOutput("dcPlot"),
+             hr(),
+             h4("繁體中文"),
+             plotOutput("dc_tw_plot"),
+             ),
+    
+    tabPanel("Age Statistics",
+             br(),
+             p(str_c("This tab shows the age distribution of deaths. ", 
+                     "The first graph organizes the age groups by Date of ",
+                     "Death, whereas the second graph shows counts by age group.")),
+             hr(),
+             plotOutput("age_stack_plot"),
+             hr(),
+             plotOutput("age_group_plot")
+             ),
+    
+    tabPanel("Chronic Condition Statistics",
+             br(),
+             p(str_c("This tab shows the chronic condition distribution of deaths. ", 
+                     "The first graph organizes the groups by Date of ",
+                     "Death, whereas the second graph shows counts by group.")),
+             hr(),
+             plotOutput("chronic_stack_plot"),
+             hr(),
+             plotOutput("chronic_group_plot")
+             ),
+    
+    tabPanel("Gender Statistics",
+             br(),
+             p(str_c("This tab shows the gender distribution of deaths. ", 
+                     "The first graph organizes the groups by Date of ",
+                     "Death, whereas the second graph shows counts by group.")),
+             hr(),
+             plotOutput("gender_stack_plot"),
+             hr(),
+             plotOutput("gender_group_plot")
+             ),
+    
+    tabPanel("Duration Statistics",
+             br(),
+             
+             #Sidebar with a slider input for number of bins 
+             sidebarLayout(
+               sidebarPanel(
+                 p(str_c("This histogram shows the distribution of days ",
+                          "between testing positive and death; a negative ",
+                          "value indicates that the person tested positive ",
+                          "after death. ")),
+                 hr(),
+                 sliderInput("bins",
+                             "Set number of bins for histogram:",
+                             min = 1,
+                             max = 50,
+                             value = 30),
+                 ),
+                 
+                 # Show a plot of the generated distribution
+                 mainPanel(
+                   plotOutput("durationPlot")
+                 )
+               ),
+             br()),
+    tabPanel("Historical Plots",
+             br(),
+             h4("Under maintenance! Please check back later."))
   )
 )
-
-# Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  output$distPlot <- renderPlot({
+  output$total_deaths <- renderText({sum(full_stats$Deaths)})
+  output$new_deaths <- renderText({sum(daily_change$`Deaths Reported Today`,
+                                       na.rm = TRUE)})
+  output$update_date <- renderText({today_date})
+  
+  
+  
+  output$dcPlot <- renderPlot({
+    daily_change %>%
+      gather(Category, Deaths, c("Deaths Previously Reported",
+                                 "Deaths Reported Today"))%>%
+      ggplot(aes(x = Date, y = Deaths , fill = Category, label = Deaths)) +
+      geom_bar(stat = "identity", position = position_stack(reverse = TRUE))+
+      geom_text(size = 3, position = position_stack(vjust=0.6, reverse = TRUE))+
+      theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
+      labs(title = "Taiwan COVID Deaths",
+           subtitle = "Tracking began on 2021/05/21",
+           caption = str_c("Source: Taiwan CDC; Updated on ", today_date))
+    
+  })
+  
+  output$dc_tw_plot <- renderPlot({
+    daily_change_tw %>%
+      gather(Category, Deaths, c("死亡案例",
+                                 "今日回報新增死亡案例"))%>%
+      ggplot(aes(x = Date, y = Deaths , fill = Category, label = Deaths)) +
+      geom_bar(stat = "identity")+
+      geom_text(size = 3, position = position_stack(vjust=0.6))+
+      theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
+      labs(title = "臺灣新冠肺炎死亡案例統計",
+           subtitle = "5月21日開始追蹤",
+           caption = str_c("資料來源: 臺灣衛生福利部疾病管制署/ 更新日: ",
+                           today_date),
+           x = "日期",
+           y = "死亡案例數",
+           fill = "")
+  })
+  
+  output$age_stack_plot <- renderPlot({
+    age_stacked_stats %>%
+      ggplot(aes(x = Date, y = Deaths, fill = Age_Group,
+                 label = Deaths)) + 
+      geom_bar(stat = "identity", position = position_stack(reverse = TRUE)) +
+      geom_text(size = 3, position = position_stack(vjust = 0.6, reverse = TRUE)) + 
+      theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
+      scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
+      labs(title = "Distribution of Deaths by Age Group", 
+           caption = str_c("Source: Taiwan CDC; Updated ",today_date),
+           subtitle = "Sorted by Date of Death",
+           fill = "Age Group")     
+  })
+  
+  output$age_group_plot <- renderPlot({
+    age_grouped_stats %>%
+      ggplot(aes(x=Age, y=Deaths, fill = Age)) + 
+      geom_bar(stat = "identity", width = 0.8)+
+      geom_text(aes(label = Deaths_pct), vjust = -0.5)+
+      scale_fill_manual(values = brewer.pal(num_colors, "Set3"))+
+      labs(title = "Deaths By Age Group",
+           fill = "Age Group",
+           caption = str_c("Source: Taiwan CDC; Updated ",today_date))     
+  })
+  
+  output$chronic_stack_plot <- renderPlot({
+    full_stats %>%
+      gather(Chronic_Condition, Deaths, c("Has_Chronic_Condition", "No_Chronic_Condition", 
+                                          "Chronic_Condition_Uncertain")) %>%
+      mutate(Chronic_Condition = str_replace_all(Chronic_Condition, "_"," ")) %>%
+      ggplot(aes(x = Date, y = Deaths, fill = Chronic_Condition, label = Deaths)) + 
+      geom_bar(stat = "identity") +
+      geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
+      theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
+      scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
+      labs(title = "Distribution of Deaths by Chronic Condition", 
+           caption = str_c("Source: Taiwan CDC; Updated ",today_date),
+           subtitle = "Sorted by Date of Death",
+           fill = "Chronic Condition")     
+  })
+  
+  output$chronic_group_plot <- renderPlot({
+    grouped_stats %>%
+      filter(Parameters == "Chronic Condition") %>%
+      mutate(Chronic_Condition = Categories) %>%
+      mutate(Chronic_Condition = str_replace_all(Chronic_Condition, "_", " "))%>%
+      ggplot(aes(x = Chronic_Condition, y = Deaths, fill = Chronic_Condition))+
+      geom_text(aes(label = Deaths_pct), vjust = -0.5, hjust = 0.5)+
+      geom_bar(stat = 'identity', width = 0.5)+
+      scale_fill_manual(values = brewer.pal(3, "Pastel2"))+
+      labs(title = "Deaths by Chronic Conditions",
+           fill = "Chronic Condition",
+           x = "Status",
+           caption = str_c("Source: Taiwan CDC; Updated ",today_date))    
+  })
+  
+  output$gender_stack_plot <- renderPlot({
+    full_stats %>%
+      gather(Gender, Deaths, c("Female", "Male")) %>%
+      ggplot(aes(x = Date, y = Deaths, fill = Gender, label = Deaths)) + 
+      geom_bar(stat = "identity") +
+      geom_text(size = 3, position = position_stack(vjust = 0.6)) + 
+      theme(axis.text.x=element_text(angle = 90, hjust = 0.5, vjust = 0.5))+
+      scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
+      labs(title = "Distribution of Deaths by Gender", 
+           caption = str_c("Source: Taiwan CDC; Updated ",today_date),
+           subtitle = "Sorted by Date of Death")     
+  })
+  
+  output$gender_group_plot <- renderPlot({
+    grouped_stats %>%
+      filter(Parameters == "Gender") %>%
+      mutate(Gender = Categories) %>%
+      ggplot(aes(x = Gender, y = Deaths, fill = Gender))+
+      geom_bar(stat = 'identity', width = 0.4)+
+      geom_text(aes(label = Deaths_pct), vjust = -0.5, hjust = 0.5)+
+      scale_fill_manual(values = brewer.pal(2, "Pastel2"))+
+      labs(title = "Deaths by Gender Split", 
+           caption = str_c("Source: Taiwan CDC; Updated ",today_date))    
+  })
+  
+  output$durationPlot <- renderPlot({
     # generate bins based on input$bins from ui.R
     x    <- duration_stats$DTD
     bins <- seq(min(x), max(x), length.out = input$bins + 1)
