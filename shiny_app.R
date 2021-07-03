@@ -11,10 +11,11 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 duration_stats <- read.csv("Durations.csv", header = TRUE, 
                            stringsAsFactors = FALSE)
 
-daily_change <- read.csv("daily_changes/Daily_change_July_2.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_July_3.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
+
 colnames(daily_change) = c("Date", "Deaths Previously Reported",
                            "Deaths Reported Today", "Updated Total Deaths")
 
@@ -26,7 +27,7 @@ colnames(daily_change_tw) = c("Date", "死亡案例", "今日回報新增死亡�
 # Various numbers Shiny display purposes
 total_deaths <- sum(full_stats$Deaths)
 new_deaths <- sum(daily_change$`Deaths Reported Today`)
-today_date <- "2021/07/02"
+today_date <- "2021/07/03"
 
 # Prep some tables for plotting
 # Age - lock in factors
@@ -96,7 +97,7 @@ ui <- fluidPage(
                  h5(tags$b("Last Updated: "),
                     textOutput("update_date", inline = TRUE)),
                  br(),
-                 p(str_c("Note: This module contains 60 fewer deaths compared ",
+                 p(str_c("Note: This module contains 59 fewer deaths compared ",
                          "to the actual total deaths, as data prior to 5/21 ",
                          "is not avaiable for analysis. Please see the ",
                          "Welcome page for more information. "))
