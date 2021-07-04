@@ -180,7 +180,7 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   arrange(Date)
 
 ##### Output #####
-write.csv(compare, "Daily_changes/Daily_change_July_3.csv")
+write.csv(compare, "daily_changes/Daily_change_July_3.csv")
 
 
 
