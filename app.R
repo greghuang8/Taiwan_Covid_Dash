@@ -164,10 +164,11 @@ ui <- fluidPage(
                  hr(),
                  h5(tags$b("Average Days: "),
                     textOutput("duration_mean", inline = TRUE)),
-                 h5(tags$b("Median: "),
+                 h5(tags$b("Median Days: "),
                     textOutput("duration_median", inline = TRUE)),
                  h5(tags$b("Number of Cases Tested Positive After Death: "),
                     textOutput("duration_negative", inline = TRUE)),
+                 h5("Note: Mean and median considers duration >= 0 days only.")
                  ),
                  
                  # Show a plot of the generated distribution
@@ -188,9 +189,11 @@ server <- function(input, output) {
                                        na.rm = TRUE)})
   output$update_date <- renderText({today_date})
    
-  output$duration_mean <- renderText({round(mean(duration_stats$DTD),1)})
+  output$duration_mean <- renderText({round(
+    mean(duration_stats$DTD[duration_stats$DTD >= 0]),1)})
    
-  output$duration_median <- renderText({median(duration_stats$DTD)})
+  output$duration_median <- renderText({median(
+    duration_stats$DTD[duration_stats$DTD >=0])})
   
   output$duration_negative <- renderText({sum(duration_stats$DTD < 0)})
   
