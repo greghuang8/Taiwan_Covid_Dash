@@ -11,10 +11,12 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 duration_stats <- read.csv("Durations.csv", header = TRUE, 
                            stringsAsFactors = FALSE)
 
-daily_change <- read.csv("daily_changes/Daily_change_July_3.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_July_4.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
+
+today_date <- "2021/07/04"
 
 colnames(daily_change) = c("Date", "Deaths Previously Reported",
                            "Deaths Reported Today", "Updated Total Deaths")
@@ -27,7 +29,6 @@ colnames(daily_change_tw) = c("Date", "死亡案例", "今日回報新增死亡�
 # Various numbers Shiny display purposes
 total_deaths <- sum(full_stats$Deaths)
 new_deaths <- sum(daily_change$`Deaths Reported Today`)
-today_date <- "2021/07/03"
 
 # Prep some tables for plotting
 # Age - lock in factors

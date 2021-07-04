@@ -31,7 +31,7 @@ Each day's new added deaths are stored in the [**daily_changes**](https://github
 A csv file indicating each case's duration between testing positive and death can be found in the [**Durations.csv**](https://github.com/greghuang8/Taiwan_Covid_Dash/blob/main/Durations.csv) file. 
 
 ### About
-Author: Greg Huang
+Author: [Greg Huang](https://github.com/greghuang8)
 
 Please forward your questions and comments to <gregory.huang@ryerson.ca>!
 
