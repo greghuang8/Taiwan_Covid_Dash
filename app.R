@@ -161,6 +161,13 @@ ui <- fluidPage(
                              min = 1,
                              max = 50,
                              value = 30),
+                 hr(),
+                 h5(tags$b("Average Days: "),
+                    textOutput("duration_mean", inline = TRUE)),
+                 h5(tags$b("Median: "),
+                    textOutput("duration_median", inline = TRUE)),
+                 h5(tags$b("Number of Cases Tested Positive After Death: "),
+                    textOutput("duration_negative", inline = TRUE)),
                  ),
                  
                  # Show a plot of the generated distribution
@@ -180,8 +187,12 @@ server <- function(input, output) {
   output$new_deaths <- renderText({sum(daily_change$`Deaths Reported Today`,
                                        na.rm = TRUE)})
   output$update_date <- renderText({today_date})
+   
+  output$duration_mean <- renderText({round(mean(duration_stats$DTD),1)})
+   
+  output$duration_median <- renderText({median(duration_stats$DTD)})
   
-  
+  output$duration_negative <- renderText({sum(duration_stats$DTD < 0)})
   
   output$dcPlot <- renderPlot({
     daily_change %>%
