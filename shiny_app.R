@@ -167,10 +167,10 @@ ui <- fluidPage(
                    plotOutput("durationPlot")
                  )
                ),
-             br()),
-    tabPanel("Historical Plots",
-             br(),
-             h4("Under maintenance! Please check back later."))
+             br())
+    # tabPanel("Historical Plots",
+    #          br(),
+    #          h4("Under maintenance! Please check back later."))
   )
 )
 server <- function(input, output) {
