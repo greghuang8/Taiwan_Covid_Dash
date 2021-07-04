@@ -73,8 +73,6 @@ age_grouped_stats$Age <- factor(age_grouped_stats$Age,
                                 levels = age_grouped_stats$Age)
 
 
-
-# Define UI for application that draws a histogram
 ui <- fluidPage(
   
   # Application title
@@ -168,7 +166,7 @@ ui <- fluidPage(
                     textOutput("duration_median", inline = TRUE)),
                  h5(tags$b("Number of Cases Tested Positive After Death: "),
                     textOutput("duration_negative", inline = TRUE)),
-                 h5("Note: Mean and median considers duration >= 0 days only.")
+                 h5("Note: Mean and median consider duration >= 0 days only.")
                  ),
                  
                  # Show a plot of the generated distribution
