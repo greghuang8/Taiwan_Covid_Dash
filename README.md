@@ -11,7 +11,7 @@ gender, and chronic condition splits of the deaths are also summarized and prese
 
 To access the Shiny dashboard, please visit [**this link**](https://greghuang8.shinyapps.io/Taiwan_Covid_Dash).
 
-Note that since I did not start collecting data from Taiwan CDC until late May, 
+Note that since I did not start collecting data from Taiwan CDC until mid June, 
 and there were no similar news releases that contained data prior to May 21st,
 this project under reports 59 deaths that occurred before this date. 
 
