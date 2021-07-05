@@ -1,4 +1,7 @@
 ### Overview
+
+To access the Shiny dashboard, please visit [**this link**](https://greghuang8.shinyapps.io/Taiwan_Covid_Dash), if you're not on it already. 
+
 This is a repository for tracking COVID deaths in the recent outbreak in Taiwan.
 The data is pulled from a daily release issued by the [Taiwan Centers for Disease Control](https://www.cdc.gov.tw/) (Taiwan-CDC), which typically goes live at 2PM 
 Taiwan Time (GMT +8). 
@@ -10,8 +13,6 @@ but in reality it is just catching up on reporting previous days' deaths.
 The purpose of this project is to tally up the deaths by its reporting date instead
 of the date of the news release. Additionally, other statistics, such as the age,
 gender, and chronic condition splits of the deaths are also summarized and presented. 
-
-To access the Shiny dashboard, please visit [**this link**](https://greghuang8.shinyapps.io/Taiwan_Covid_Dash), if you're not on it already. 
 
 Note that since I did not start collecting data from Taiwan CDC until mid June, 
 and there were no similar news releases that contained data prior to May 21st,
