@@ -147,7 +147,7 @@ write.csv(duration, "Durations.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("july4.pdf")
+today <- extract_tables("july6.pdf")
 pages_today <- as.data.frame(today[[1]])
 pages_today <- pages_today[-1,2:12]
 
@@ -174,12 +174,6 @@ for (index in 1:length(pages_today$DOD)){
 pages_today <- pages_today %>%
   mutate(across(DOD,as.character))
 
-# July 5: No pdf published w/ only 1 case
-pages_today <- data.frame(1, "男", "70多歲","有","調查中","6/11","發燒",
-                          "6/11", "6/11", "6/12", "7/3")
-colnames(pages_today) <- c("CaseNum","Gender","Age","Chronic","History",
-                           "SymptomDate", "Symptoms","TestDate",
-                           "QuarantineDate","ConfirmDate","DOD")
 
 ##### Compare today's deaths to master #####
 deaths_old <- deaths
@@ -196,7 +190,7 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   arrange(Date)
 
 ##### Output #####
-write.csv(compare, "daily_changes/Daily_change_July_5.csv")
+write.csv(compare, "daily_changes/Daily_change_July_6.csv")
 
 
 
