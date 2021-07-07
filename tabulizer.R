@@ -147,7 +147,7 @@ write.csv(duration, "Durations.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("july6.pdf")
+today <- extract_tables("july7.pdf")
 pages_today <- as.data.frame(today[[1]])
 pages_today <- pages_today[-1,2:12]
 
@@ -190,7 +190,7 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   arrange(Date)
 
 ##### Output #####
-write.csv(compare, "daily_changes/Daily_change_July_6.csv")
+write.csv(compare, "daily_changes/Daily_change_July_7.csv")
 
 
 
