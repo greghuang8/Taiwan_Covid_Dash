@@ -11,12 +11,12 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 duration_stats <- read.csv("Durations.csv", header = TRUE, 
                            stringsAsFactors = FALSE)
 
-daily_change <- read.csv("daily_changes/Daily_change_July_9.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_July_11.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
 
-today_date <- "2021/07/09"
+today_date <- "2021/07/11"
 
 colnames(daily_change) = c("Date", "Deaths Previously Reported",
                            "Deaths Reported Today", "Updated Total Deaths")
