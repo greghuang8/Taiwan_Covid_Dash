@@ -80,6 +80,14 @@ colnames(july5) <- c("CaseNum","Gender","Age","Chronic","History",
                      "QuarantineDate","ConfirmDate","DOD")
 master <- bind_rows(master,july5)
 
+# July 12: no pdf, manual entry also 
+july12 <- data.frame("2", "男", "60多歲","有","調查中","5/11","發燒",
+                     "5/19", "5/20", "5/20", "7/10")
+colnames(july12) <- c("CaseNum","Gender","Age","Chronic","History",
+                           "SymptomDate", "Symptoms","TestDate",
+                           "QuarantineDate","ConfirmDate","DOD")
+master <- bind_rows(master,july12)
+
 ##### Analytics for MASTER data #####
 analytics <- master %>%
   mutate(Age = str_extract_all(Age,"[0-9]+"))%>%
@@ -147,7 +155,7 @@ write.csv(duration, "Durations.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("july11.pdf")
+today <- extract_tables("july13.pdf")
 pages_today <- as.data.frame(today[[1]])
 pages_today <- pages_today[-1,2:12]
 
@@ -190,7 +198,7 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   arrange(Date)
 
 ##### Output #####
-write.csv(compare, "daily_changes/Daily_change_July_11.csv")
+write.csv(compare, "daily_changes/Daily_change_July_13.csv")
 
 
 
