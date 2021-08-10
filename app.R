@@ -2,6 +2,7 @@ library(shiny)
 library(tidyverse)
 library(RColorBrewer)
 
+
 # Load in tables
 full_stats <- read.csv("Full_statistics.csv", header = TRUE,
                        stringsAsFactors = FALSE) %>%
@@ -11,12 +12,12 @@ full_stats <- read.csv("Full_statistics.csv", header = TRUE,
 duration_stats <- read.csv("Durations.csv", header = TRUE, 
                            stringsAsFactors = FALSE)
 
-daily_change <- read.csv("daily_changes/Daily_change_July_13.csv", 
+daily_change <- read.csv("daily_changes/Daily_change_Aug_9.csv", 
                          header = TRUE, stringsAsFactors = FALSE) %>%
   na_if(0) %>%
   select(-X)
 
-today_date <- "2021/07/13"
+today_date <- "2021/08/09"
 
 colnames(daily_change) = c("Date", "Deaths Previously Reported",
                            "Deaths Reported Today", "Updated Total Deaths")
@@ -158,7 +159,7 @@ ui <- fluidPage(
                              "Set number of bins for histogram:",
                              min = 1,
                              max = 50,
-                             value = 30),
+                             value = 12),
                  hr(),
                  h5(tags$b("Average Days: "),
                     textOutput("duration_mean", inline = TRUE)),

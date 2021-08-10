@@ -72,21 +72,24 @@ master <- master %>%
   mutate(across(DOD,as.character))
 
 
-# July 5: no pdf, manual entry
-july5 <- data.frame("1", "女", "70多歲","有","調查中","6/11","發燒",
-                    "6/11", "6/11", "6/12", "7/3")
-colnames(july5) <- c("CaseNum","Gender","Age","Chronic","History",
-                     "SymptomDate", "Symptoms","TestDate",
-                     "QuarantineDate","ConfirmDate","DOD")
-master <- bind_rows(master,july5)
+# No pdf days
+manual <- read.csv("manual.csv", stringsAsFactors = FALSE, 
+                   encoding = "UTF-8", header = TRUE)
+colnames(manual) <- c("CaseNum","Gender","Age","Chronic","History",
+                      "SymptomDate", "Symptoms","TestDate",
+                      "QuarantineDate","ConfirmDate","DOD")
+manual[,1] <- as.character(manual[,1])
+master <- bind_rows(master,manual)
 
-# July 12: no pdf, manual entry also 
-july12 <- data.frame("2", "男", "60多歲","有","調查中","5/11","發燒",
-                     "5/19", "5/20", "5/20", "7/10")
-colnames(july12) <- c("CaseNum","Gender","Age","Chronic","History",
-                           "SymptomDate", "Symptoms","TestDate",
-                           "QuarantineDate","ConfirmDate","DOD")
-master <- bind_rows(master,july12)
+# Aug 6 (weird vaccine info column)
+aug6 <- extract_tables("aug6.pdf")
+aug6_page1 <- as.data.frame(aug6[[1]], stringAsFactors = FALSE)
+aug6_page1 <- aug6_page1[-1,c(2:6,8:13)]
+colnames(aug6_page1) <- c("CaseNum","Gender","Age","Chronic","History",
+                      "SymptomDate", "Symptoms","TestDate",
+                      "QuarantineDate","ConfirmDate","DOD")
+master <- bind_rows(master,aug6_page1)
+
 
 ##### Analytics for MASTER data #####
 analytics <- master %>%
@@ -155,7 +158,7 @@ write.csv(duration, "Durations.csv")
 # the most recent press release of death counts. 
 
 ##### DAILY CHANGE TRACKING #####
-today <- extract_tables("july13.pdf")
+today <- extract_tables("aug9.pdf")
 pages_today <- as.data.frame(today[[1]])
 pages_today <- pages_today[-1,2:12]
 
@@ -197,8 +200,10 @@ compare <- full_join(deaths_old, deaths_today, by = "Date",
   mutate(Date = format(Date, "%m/%d")) %>%
   arrange(Date)
 
+print(sum(compare$Deaths_reported_today))
+
 ##### Output #####
-write.csv(compare, "daily_changes/Daily_change_July_13.csv")
+write.csv(compare, "daily_changes/Daily_change_Aug_9.csv")
 
 
 
